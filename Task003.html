@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: black;
+            color: white;
+            font: normal 15pt Arial;
+        }
+        h1{
+            color: white;
+        }
+        
+    
+
+    </style>
+</head>
+<body>
+    <h1>Exercise 03</h1>
+    <p1>
+        Make a code that read the values (from user's input) necessary to complete the 
+        following calculus:<br> J = C * i * t (making sure the "time" and "rate" remain in the same time
+        period).
+        <br><br>
+        Also, depending on the values given, the code needs to return
+        the value that has been missing from the equation ('?').
+        <br><br><br>
+        Ex.: J = 120; C = 480; t = 6 months; i = ?
+        <br><br>
+        Answer: i = 0.04166... => ~ 4,17% p.m. (per month).
+        <br><br><br><br><br><br>
+        R:
+    </p1>
+    <script>
+
+        var aux = 0;
+        var error = 0;
+        var timeAux = 0;
+        var perRate;
+        var perTime;
+        
+
+        function prepareTime(){
+            Number(time);
+            if(rateSpan != timeSpan){
+
+                if(rateSpan == 1){// Year to Month.
+                    timeAux = time - (Math.floor(time));
+                    if(timeAux > 0){
+                        time += timeAux * 12;
+                    }
+                    time *= 12;
+                }
+
+                if(rateSpan == 2){// Month to Year.
+                    timeAux = time - (Math.floor(time));
+                    if(timeAux > 0){
+                        time += timeAux * 4;
+                    }
+                    time /= 12;
+                }
+            }
+        }
+
+        function interestDiscover(){
+            Number(interest, principalAmount);
+            interest = principalAmount * rate * time;
+            rate *= 100.00;
+        }
+
+        function principalAmountDiscover(){
+            Number(principalAmount, interest);
+            principalAmount = interest / (rate * time);
+            rate *= 100.00;
+        }
+
+        function rateDiscover(){
+            Number(interest, principalAmount, time, rate);
+            rate = interest / (principalAmount * time);
+        }
+
+        function timeDiscover(){
+            Number(interest, principalAmount);
+            time = interest / (principalAmount * rate);
+            rate *= 100.00;
+        }
+
+
+
+        window.alert("On this code you'll need to inform at least 3 of the 4 variables necessary to complete the calculus. (Ex.: if [ i = '?' ] then 'i' will be discovered)")
+
+        var interest = window.prompt("Input J (interest). [ '?' if unkown ]")
+
+        var principalAmount = window.prompt("Input C (Principal Amount). [ '?' if unkown ]")
+        if(interest == '?'){if(principalAmount == '?'){ error = error + 1; }}
+
+        var rate = window.prompt("Input i (% rate). [ '?' if unkown ]")
+        if((interest == '?' || principalAmount == '?') && rate == '?'){ error++; }
+        if(rate != '?'){
+            Number(rate);
+            var rateSpan = Number(window.prompt("1 - per month rate      2 - per year rate"))
+            rate /= 100.00;
+        }
+
+        var time = window.prompt("Input t (time). [ '?' if unkown ]")
+        if((interest == '?' || principalAmount == '?' || rate == '?') && time == '?'){ error++; }
+        if(time != '?'){
+            var timeSpan = Number(window.prompt("1 - Month(s)       2 - Year(s)"))
+        }
+
+        if(error > 0 || (rateSpan < 1 || rateSpan >  2) || (timeSpan < 1 || timeSpan > 2)){
+            window.alert("Something went wrong...")
+        }
+
+        else{
+            if(timeSpan == 1){ perRate = "p.m." }
+            if(timeSpan == 2){ perRate = "p.y." }
+
+            if(rateSpan == 1){ perTime = "month(s)" }
+            if(rateSpan == 2){ perTime = "year(s)" }
+            
+            if(rateSpan == 1){ perSubTime = "day(s)." }
+            if(rateSpan == 2){ perSubTime = "month(s)." }
+
+            if(interest == '?'){
+                prepareTime();
+                interestDiscover();
+                window.alert(`The interest is: ${interest.toLocaleString('eng', {style:'currency', currency:'USD'})}`);
+                aux = 1;
+            }
+
+            if(principalAmount == '?'){
+                prepareTime();
+                principalAmountDiscover();
+                window.alert(`The principal amount is: ${principalAmount.toLocaleString('eng', {style:'currency', currency:'USD'})}`);
+                aux = 2;
+
+            }
+
+            if(rate == '?'){
+
+                rateDiscover();
+                rate *= 100;
+                window.alert(`The rate is: ~${rate.toFixed(2)}% ${perRate}`);
+                aux = 3;
+            }
+
+            if(time == '?'){
+
+                timeDiscover();
+
+                timeAux = time - (Math.floor(time));
+
+                if(timeAux > 0){
+
+                    time -= timeAux;
+
+                    if(rateSpan == 1){
+                        timeAux *= 4;
+                        window.alert(`The time is: ${time} ${perTime} and ${timeAux.toFixed(2)} ${perSubTime}`);
+                    }
+
+                    if(rateSpan == 2){
+                        timeAux *= 12;
+                        window.alert(`The time is: ${time} ${perTime} and ${timeAux.toFixed(2)} ${perSubTime}`);
+                    }
+
+                    aux = 5;
+                }
+
+                if(timeAux == 0){
+                    window.alert(`The time is: ${time} ${perTime}.`);
+
+                    aux = 4;
+                }
+            }
+
+            else{
+                window.alert("Please, carefully read the instructions again.");
+                document.write("At least one variable must be 'unkown'.");
+            }
+        }
+
+        switch(aux){
+            case 1:
+                document.write(`C = ${principalAmount} ;  i = ${rate}% ${perRate} ;  t = ${time} ${perTime} ;  J = ?`);
+                document.write(`<br><br><br>J  =>  ${interest.toLocaleString('eng', {style:'currency', currency:'USD'})}`);
+                break;
+
+            case 2:
+                document.write(`J = ${interest} ;  i = ${rate}% ${perRate} ;  t = ${time} ${perTime} ;  C = ?`);
+                document.write(`<br><br><br>C  =>  ${principalAmount.toLocaleString('eng', {style:'currency', currency:'USD'})}`);
+                break;
+
+            case 3:
+                if(timeSpan == 1){ perTime = "month(s)" }
+                if(timeSpan == 2){ perTime = "year(s)" }
+
+                document.write(`J = ${interest} ;  C = ${principalAmount} ;  t = ${time} ${perTime} ;  i = ?`);
+                document.write(`<br><br><br>i  =>  ~${rate.toFixed(2)}% ${perRate}`);
+                break;
+
+            case 4:
+                if(rateSpan == 1){ perRate = "p.m." }
+                if(rateSpan == 2){ perRate = "p.y." }
+
+                document.write(`J = ${interest} ;  C = ${principalAmount} ;  i = ${rate}% ${perRate} ;  t = ?`);
+                document.write(`<br><br><br>t  =>  ${time} ${perTime}.`);
+                break;
+
+            case 5:
+                if(rateSpan == 1){ perRate = "p.m." }
+                if(rateSpan == 2){ perRate = "p.y." }
+
+                document.write(`J = ${interest} ;  C = ${principalAmount} ;  i = ${rate}% ${perRate} ;  t = ?`);
+                document.write(`<br><br><br>t  =>  ${time} ${perTime} and ${timeAux.toFixed(2)} ${perSubTime}`);
+                break;
+        }
+    </script>
+</body>
+</html>
